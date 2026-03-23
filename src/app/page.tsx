@@ -75,10 +75,10 @@ export default function Home() {
                       Modern Luxury Apartment
                     </h3>
                     <p className="text-gray-500 text-sm mb-4 flex items-center gap-1.5 line-clamp-1">
-                      <MapPin size={16} className="shrink-0" /> 123 Skyline Ave, Metro City
+                      <MapPin size={16} className="shrink-0" /> PT Usha Road, Kozhikode, Kerala
                     </p>
                     <div className="text-2xl font-extrabold text-[#408A71] mb-6">
-                      $450,000
+                      ₹45,00,000
                     </div>
                   </div>
                   

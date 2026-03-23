@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Building2, Menu, X, ArrowRight } from "lucide-react";
-import { useState } from "react";
+import { Building2, Menu, X, ArrowRight, ChevronDown, LogOut, Settings, User as UserIcon } from "lucide-react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { auth } from "@/lib/firebase";
+import { onAuthStateChanged, signOut, User } from "firebase/auth";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -15,6 +17,20 @@ const navLinks = [
 export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    setDropdownOpen(false);
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all duration-300">
@@ -55,15 +71,62 @@ export default function Navbar() {
 
         {/* Actions */}
         <div className="hidden md:flex items-center gap-4">
-          <Link href="/login" className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors">
-            Log In
-          </Link>
-          <Link
-            href="/signup"
-            className="flex items-center gap-2 bg-[#408A71] text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-[#34745c] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
-          >
-            Get Started <ArrowRight size={16} />
-          </Link>
+          {user ? (
+            <div className="relative">
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-full border border-gray-200"
+              >
+                {user.photoURL ? (
+                  <img src={user.photoURL} alt="Profile" className="w-6 h-6 rounded-full" referrerPolicy="no-referrer" />
+                ) : (
+                  <UserIcon size={18} className="text-[#408A71]" />
+                )}
+                <span>{user.displayName || user.email?.split('@')[0] || "User"}</span>
+                <ChevronDown size={16} className={`transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
+              </button>
+
+              <AnimatePresence>
+                {dropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute top-12 right-0 w-48 bg-white border border-gray-100 rounded-xl shadow-xl py-2 flex flex-col z-50"
+                  >
+                    <Link
+                      href="/settings"
+                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#408A71] transition-colors"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      <Settings size={16} />
+                      Settings
+                    </Link>
+                    <hr className="my-1 border-gray-100" />
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors w-full text-left"
+                    >
+                      <LogOut size={16} />
+                      Log Out
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <>
+              <Link href="/login" className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors">
+                Log In
+              </Link>
+              <Link
+                href="/signup"
+                className="flex items-center gap-2 bg-[#408A71] text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-[#34745c] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+              >
+                Get Started <ArrowRight size={16} />
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Toggle */}
@@ -84,7 +147,23 @@ export default function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden bg-white border-b border-gray-100 overflow-hidden"
           >
-            <div className="px-6 py-6 flex flex-col gap-4">
+            <div className="px-6 py-4 flex flex-col gap-3">
+              {user && (
+                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl mb-2">
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt="Profile" className="w-10 h-10 rounded-full" referrerPolicy="no-referrer" />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-[#408A71]/20 flex items-center justify-center">
+                      <UserIcon size={20} className="text-[#408A71]" />
+                    </div>
+                  )}
+                  <div>
+                    <p className="font-semibold text-gray-900">{user.displayName || "User"}</p>
+                    <p className="text-xs text-gray-500">{user.email}</p>
+                  </div>
+                </div>
+              )}
+            
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -99,21 +178,48 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
+              
               <hr className="border-gray-100 my-2" />
-              <Link
-                href="/login"
-                onClick={() => setIsOpen(false)}
-                className="text-lg font-medium p-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
-              >
-                Log In
-              </Link>
-              <Link
-                href="/signup"
-                onClick={() => setIsOpen(false)}
-                className="bg-[#408A71] text-white p-3 rounded-xl text-center text-lg font-semibold shadow-md active:scale-95 transition-all"
-              >
-                Get Started
-              </Link>
+              
+              {user ? (
+                <>
+                  <Link
+                    href="/settings"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-3 text-lg font-medium p-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
+                  >
+                    <Settings size={20} />
+                    Settings
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsOpen(false);
+                    }}
+                    className="flex items-center gap-3 text-lg font-medium p-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors text-left"
+                  >
+                    <LogOut size={20} />
+                    Log Out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={() => setIsOpen(false)}
+                    className="text-lg font-medium p-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
+                  >
+                    Log In
+                  </Link>
+                  <Link
+                    href="/signup"
+                    onClick={() => setIsOpen(false)}
+                    className="bg-[#408A71] text-white p-3 rounded-xl text-center text-lg font-semibold shadow-md active:scale-95 transition-all"
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
             </div>
           </motion.div>
         )}
