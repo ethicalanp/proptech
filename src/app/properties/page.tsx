@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { MapPin, Home, Building, Key, Clock, Filter, ChevronDown, SlidersHorizontal, Check, Settings2, X } from "lucide-react";
+import { MapPin, Home, Building, Key, Clock, Filter, ChevronDown, SlidersHorizontal, Check, Settings2, X, BadgeCheck } from "lucide-react";
 import { getCompatibility, UserPreferences } from "../../utils/compatibility";
 import { usePreferences } from "../../context/PreferencesContext";
 
@@ -79,12 +79,12 @@ export default function PropertiesPage() {
   
   // Mock property data with rules
   const mockProperties = [
-    { id: 1, rules: { sleepSchedule: "early bird", foodAllowed: "veg", cleanliness: "high", workModeAllowed: "office", guestsAllowed: false, personality: "quiet", coupleFriendly: false } },
-    { id: 2, rules: { sleepSchedule: "night owl", foodAllowed: "any", cleanliness: "medium", workModeAllowed: "wfh", guestsAllowed: true, personality: "social", coupleFriendly: true } },
-    { id: 3, rules: { sleepSchedule: "any", foodAllowed: "veg", cleanliness: "medium", workModeAllowed: "any", guestsAllowed: false, personality: "quiet", coupleFriendly: false } },
-    { id: 4, rules: { sleepSchedule: "early bird", foodAllowed: "any", cleanliness: "low", workModeAllowed: "wfh", guestsAllowed: true, personality: "social", coupleFriendly: true } },
-    { id: 5, rules: { sleepSchedule: "night owl", foodAllowed: "any", cleanliness: "high", workModeAllowed: "office", guestsAllowed: false, personality: "any", coupleFriendly: false } },
-    { id: 6, rules: { sleepSchedule: "any", foodAllowed: "any", cleanliness: "any", workModeAllowed: "any", guestsAllowed: true, personality: "any", coupleFriendly: true } },
+    { id: 1, listerLevel: 4, rules: { sleepSchedule: "early bird", foodAllowed: "veg", cleanliness: "high", workModeAllowed: "office", guestsAllowed: false, personality: "quiet", coupleFriendly: false } },
+    { id: 2, listerLevel: 3, rules: { sleepSchedule: "night owl", foodAllowed: "any", cleanliness: "medium", workModeAllowed: "wfh", guestsAllowed: true, personality: "social", coupleFriendly: true } },
+    { id: 3, listerLevel: 2, rules: { sleepSchedule: "any", foodAllowed: "veg", cleanliness: "medium", workModeAllowed: "any", guestsAllowed: false, personality: "quiet", coupleFriendly: false } },
+    { id: 4, listerLevel: 4, rules: { sleepSchedule: "early bird", foodAllowed: "any", cleanliness: "low", workModeAllowed: "wfh", guestsAllowed: true, personality: "social", coupleFriendly: true } },
+    { id: 5, listerLevel: 1, rules: { sleepSchedule: "night owl", foodAllowed: "any", cleanliness: "high", workModeAllowed: "office", guestsAllowed: false, personality: "any", coupleFriendly: false } },
+    { id: 6, listerLevel: 3, rules: { sleepSchedule: "any", foodAllowed: "any", cleanliness: "any", workModeAllowed: "any", guestsAllowed: true, personality: "any", coupleFriendly: true } },
   ];
 
   // Compute compatibility for rent listings using the APPLIED preferences
@@ -97,6 +97,14 @@ export default function PropertiesPage() {
   const displayedProperties = propertiesWithCompat
     .filter(p => listingType !== "rent" || (p.compatibility ?? 0) >= appliedMinCompatibility)
     .sort((a, b) => {
+      // Prioritize verified listers (level 3 and 4)
+      const aVerified = a.listerLevel >= 3 ? 1 : 0;
+      const bVerified = b.listerLevel >= 3 ? 1 : 0;
+      
+      if (aVerified !== bVerified) {
+        return bVerified - aVerified;
+      }
+      
       if (listingType === "rent") {
         return (b.compatibility ?? 0) - (a.compatibility ?? 0);
       }
@@ -341,9 +349,25 @@ export default function PropertiesPage() {
                         </div>
                       </div>
                       
-                      <p className="text-gray-500 text-sm mb-5 flex items-center gap-1.5 line-clamp-1 font-medium">
+                      <p className="text-gray-500 text-sm mb-4 flex items-center gap-1.5 line-clamp-1 font-medium">
                         <MapPin size={16} className="shrink-0 text-gray-400" /> Thondayad Bypass, Kozhikode, Kerala
                       </p>
+
+                      {/* Verification Badges */}
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {property.listerLevel === 4 && (
+                          <div className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+                            <BadgeCheck size={12} /> Trusted Agent
+                          </div>
+                        )}
+                        {property.listerLevel === 3 && (
+                          <div className="inline-flex items-center gap-1 bg-green-50 text-[#408A71] text-[10px] font-bold px-2 py-0.5 rounded border border-green-100 uppercase tracking-wider">
+                            <Check size={12} /> ID Verified Owner
+                          </div>
+                        )}
+                        {/* Fallback space for layout consistency if no badge */}
+                        {property.listerLevel < 3 && <div className="h-5" />}
+                      </div>
                     </div>
                     
                     <div className="flex items-center justify-between text-gray-600 text-sm pt-4 border-t border-gray-100 font-medium">

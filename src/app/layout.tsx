@@ -20,6 +20,7 @@ export const metadata: Metadata = {
 };
 
 import { PreferencesProvider } from "@/context/PreferencesContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 export default function RootLayout({
   children,
@@ -29,13 +30,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} scroll-smooth antialiased`}>
       <body className="flex flex-col min-h-screen bg-gray-50 pt-20">
-        <Navbar />
-        <PreferencesProvider>
-          <main className="flex-grow">
-            {children}
-          </main>
-        </PreferencesProvider>
-        <Footer />
+        <AuthProvider>
+          <Navbar />
+          <PreferencesProvider>
+            <main className="flex-grow">
+              {children}
+            </main>
+          </PreferencesProvider>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

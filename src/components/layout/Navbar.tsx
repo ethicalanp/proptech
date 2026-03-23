@@ -6,7 +6,8 @@ import { Building2, Menu, X, ArrowRight, ChevronDown, LogOut, Settings, User as 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { auth } from "@/lib/firebase";
-import { onAuthStateChanged, signOut, User } from "firebase/auth";
+import { signOut } from "firebase/auth";
+import { useAuth } from "@/context/AuthContext";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -17,15 +18,8 @@ const navLinks = [
 export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-    return () => unsubscribe();
-  }, []);
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -71,6 +65,9 @@ export default function Navbar() {
 
         {/* Actions */}
         <div className="hidden md:flex items-center gap-4">
+          <Link href="/post" className="text-sm font-bold text-[#408A71] bg-white hover:bg-gray-50 px-5 py-2.5 rounded-full transition-colors border border-gray-200 shadow-sm">
+            List Property
+          </Link>
           {user ? (
             <div className="relative">
               <button
@@ -181,6 +178,14 @@ export default function Navbar() {
               
               <hr className="border-gray-100 my-2" />
               
+              <Link
+                href="/post"
+                onClick={() => setIsOpen(false)}
+                className="text-lg font-bold p-3 rounded-lg bg-green-50 text-[#408A71] text-center shadow-sm"
+              >
+                List Property
+              </Link>
+
               {user ? (
                 <>
                   <Link
