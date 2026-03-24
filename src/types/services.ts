@@ -9,7 +9,7 @@ export interface IAuthService {
 
 export interface IPropertyService {
   getPropertyById(id: string): Promise<Property | null>;
-  getProperties(filters?: any): Promise<Property[]>;
+  getProperties(filters?: Record<string, unknown>): Promise<Property[]>;
   createProperty(propertyData: Omit<Property, 'id' | 'createdAt' | 'verified'>): Promise<Property>;
   updateProperty(id: string, updates: Partial<Property>): Promise<Property>;
   deleteProperty(id: string): Promise<void>;

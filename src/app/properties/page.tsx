@@ -6,7 +6,8 @@ import { MapPin, Home, Building, Key, Clock, Filter, ChevronDown, SlidersHorizon
 import { getCompatibility, UserPreferences } from "../../utils/compatibility";
 import { usePreferences } from "../../context/PreferencesContext";
 
-const CustomSelect = ({ label, options, value, onChange }: any) => {
+type SelectOption = { value: string | boolean; label: string };
+const CustomSelect = ({ label, options, value, onChange }: { label: string, options: SelectOption[], value: string | boolean, onChange: (val: string | boolean) => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -20,7 +21,7 @@ const CustomSelect = ({ label, options, value, onChange }: any) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const selectedOption = options.find((o: any) => o.value === value) || options[0];
+  const selectedOption = options.find((o: SelectOption) => o.value === value) || options[0];
 
   return (
     <div className="relative" ref={ref}>
@@ -37,7 +38,7 @@ const CustomSelect = ({ label, options, value, onChange }: any) => {
       {isOpen && (
         <div className="absolute z-50 w-full mt-2 bg-white/95 backdrop-blur-sm border border-gray-100 rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
           <div className="max-h-60 overflow-y-auto py-1">
-            {options.map((option: any) => (
+            {options.map((option: SelectOption) => (
               <button
                 key={String(option.value)}
                 type="button"
@@ -75,6 +76,41 @@ export default function PropertiesPage() {
     setAppliedPrefs(prefs);
     setAppliedMinCompatibility(minCompatibility);
     if (window.innerWidth < 1024) setIsMobileFilterOpen(false);
+  };
+  
+  const handleResetFilters = () => {
+    setListingType("rent");
+    setMinCompatibility(0);
+    setAppliedMinCompatibility(0);
+    
+    // Default preferences
+    const defaultPrefs = {
+      sleepSchedule: 'early bird',
+      food: 'any',
+      cleanliness: 'medium',
+      workMode: 'wfh',
+      guests: false,
+      coupleFriendly: false,
+      personality: 'quiet'
+    };
+    setPrefs(defaultPrefs);
+    setAppliedPrefs(defaultPrefs);
+
+    // Reset DOM inputs for Location and Price Range
+    const textInputs = document.querySelectorAll('input[type="text"]');
+    textInputs.forEach(el => { (el as HTMLInputElement).value = ''; });
+    
+    const numberInputs = document.querySelectorAll('input[type="number"]');
+    numberInputs.forEach(el => {
+      const input = el as HTMLInputElement;
+      if (input.placeholder === "Min") input.value = "5000";
+      if (input.placeholder === "Max") input.value = "50000";
+    });
+
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach((el, idx) => {
+      (el as HTMLInputElement).checked = (idx === 0);
+    });
   };
   
   // Mock property data with rules
@@ -164,7 +200,7 @@ export default function PropertiesPage() {
                 <h2 className="text-xl font-bold flex items-center gap-2 text-gray-900">
                   <Filter size={20} className="text-[#408A71]" /> Filters
                 </h2>
-                <button className="text-sm text-[#408A71] font-semibold hover:underline">Reset All</button>
+                <button onClick={handleResetFilters} className="text-sm text-[#408A71] font-semibold hover:underline">Reset All</button>
               </div>
 
               {/* Location Input */}
@@ -213,25 +249,25 @@ export default function PropertiesPage() {
                      </div>
                      {isPrefsOpen && (
                        <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm space-y-6">
-                         <CustomSelect label="Sleep Schedule" value={prefs.sleepSchedule} onChange={(val: any) => setPrefs({...prefs, sleepSchedule: val})} options={[{value: 'early bird', label: 'Early Bird'}, {value: 'night owl', label: 'Night Owl'}]} />
-                         <CustomSelect label="Diet" value={prefs.food} onChange={(val: any) => setPrefs({...prefs, food: val})} options={[{value: 'veg', label: 'Vegetarian'}, {value: 'non-veg', label: 'Non-Vegetarian'}, {value: 'any', label: 'Any'}]} />
+                         <CustomSelect label="Sleep Schedule" value={prefs.sleepSchedule} onChange={(val) => setPrefs({...prefs, sleepSchedule: val})} options={[{value: 'early bird', label: 'Early Bird'}, {value: 'night owl', label: 'Night Owl'}]} />
+                         <CustomSelect label="Diet" value={prefs.food} onChange={(val) => setPrefs({...prefs, food: val})} options={[{value: 'veg', label: 'Vegetarian'}, {value: 'non-veg', label: 'Non-Vegetarian'}, {value: 'any', label: 'Any'}]} />
                          <div className="flex gap-4">
                            <div className="flex-1">
-                             <CustomSelect label="Tidiness" value={prefs.cleanliness} onChange={(val: any) => setPrefs({...prefs, cleanliness: val})} options={[{value: 'low', label: 'Low'}, {value: 'medium', label: 'Medium'}, {value: 'high', label: 'High'}]} />
+                             <CustomSelect label="Tidiness" value={prefs.cleanliness} onChange={(val) => setPrefs({...prefs, cleanliness: val})} options={[{value: 'low', label: 'Low'}, {value: 'medium', label: 'Medium'}, {value: 'high', label: 'High'}]} />
                            </div>
                            <div className="flex-1">
-                             <CustomSelect label="Work Mode" value={prefs.workMode} onChange={(val: any) => setPrefs({...prefs, workMode: val})} options={[{value: 'wfh', label: 'WFH'}, {value: 'office', label: 'Office'}]} />
+                             <CustomSelect label="Work Mode" value={prefs.workMode} onChange={(val) => setPrefs({...prefs, workMode: val})} options={[{value: 'wfh', label: 'WFH'}, {value: 'office', label: 'Office'}]} />
                            </div>
                          </div>
                          <div className="flex gap-4">
                            <div className="flex-1">
-                             <CustomSelect label="Guests" value={prefs.guests} onChange={(val: any) => setPrefs({...prefs, guests: val})} options={[{value: true, label: 'Allowed'}, {value: false, label: 'Strict No'}]} />
+                             <CustomSelect label="Guests" value={prefs.guests} onChange={(val) => setPrefs({...prefs, guests: val})} options={[{value: true, label: 'Allowed'}, {value: false, label: 'Strict No'}]} />
                            </div>
                            <div className="flex-1">
-                             <CustomSelect label="Couples" value={prefs.coupleFriendly} onChange={(val: any) => setPrefs({...prefs, coupleFriendly: val})} options={[{value: true, label: 'Friendly'}, {value: false, label: 'Strict No'}]} />
+                             <CustomSelect label="Couples" value={prefs.coupleFriendly} onChange={(val) => setPrefs({...prefs, coupleFriendly: val})} options={[{value: true, label: 'Friendly'}, {value: false, label: 'Strict No'}]} />
                            </div>
                          </div>
-                         <CustomSelect label="Personality" value={prefs.personality} onChange={(val: any) => setPrefs({...prefs, personality: val})} options={[{value: 'quiet', label: 'Quiet & Reserved'}, {value: 'social', label: 'Social & Talkative'}]} />
+                         <CustomSelect label="Personality" value={prefs.personality} onChange={(val) => setPrefs({...prefs, personality: val})} options={[{value: 'quiet', label: 'Quiet & Reserved'}, {value: 'social', label: 'Social & Talkative'}]} />
                        </div>
                      )}
                    </div>
@@ -309,6 +345,16 @@ export default function PropertiesPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
               {displayedProperties.map((property) => {
                 const item = property.id;
+                const sampleImages = [
+                  "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                  "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                  "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                  "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                  "https://images.unsplash.com/photo-1449844908441-8829872d2607?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                ];
+                const imageSrc = sampleImages[item % sampleImages.length];
+
                 return (
                 <Link key={item} href={`/properties/${item}?type=${listingType}`} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group cursor-pointer flex flex-col h-full">
                   <div className="h-56 w-full bg-gray-100 relative overflow-hidden">
@@ -329,9 +375,9 @@ export default function PropertiesPage() {
                     </div>
                     {/* Mock Image Placeholder */}
                     <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                       <Home size={40} className="text-gray-300 z-10" />
+                       <img src={imageSrc} alt="Property" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                   </div>
                   
                   <div className="p-5 flex flex-col flex-grow justify-between">

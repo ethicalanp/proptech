@@ -17,8 +17,8 @@ export default function GoogleLoginButton() {
       const result = await signInWithPopup(auth, googleProvider);
       console.log('Logged in user:', result.user);
       router.push('/');
-    } catch (err: any) {
-      setError(err.message || 'Failed to login with Google.');
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Failed to login with Google.');
     } finally {
       setLoading(false);
     }

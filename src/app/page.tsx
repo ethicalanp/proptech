@@ -54,7 +54,15 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3].map((item) => (
+            {[1, 2, 3].map((item, index) => {
+              const sampleImages = [
+                "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+              ];
+              const imageSrc = sampleImages[index % sampleImages.length];
+
+              return (
               <div key={item} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group cursor-pointer flex flex-col h-full">
                 <div className="h-64 w-full bg-gray-200 relative overflow-hidden flex items-center justify-center">
                   <div className="absolute top-4 w-full flex justify-between items-start px-4 z-10">
@@ -65,9 +73,8 @@ export default function Home() {
                       <Clock size={12} /> 3 Days Ago
                     </span>
                   </div>
-                  {/* Mock Image Placeholder */}
-                  <HomeIcon size={48} className="text-gray-300 z-10" />
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#408A71]/10 to-gray-300 transition-transform duration-500 group-hover:scale-105"></div>
+                  <img src={imageSrc} alt="Property" className="w-full h-full object-cover z-0 transition-transform duration-500 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                 </div>
                 <div className="p-6 flex flex-col flex-grow justify-between">
                   <div>
@@ -89,7 +96,8 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
           
           <div className="mt-10 text-center md:hidden">

@@ -31,6 +31,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     try {
       const stored = localStorage.getItem("proptech_user_prefs");
       if (stored) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setPrefsState(JSON.parse(stored));
       }
     } catch (err) {

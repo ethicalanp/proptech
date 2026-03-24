@@ -1,0 +1,83 @@
+
+> proptech-mvp@0.1.0 lint
+> eslint
+
+
+/home/shifil/Documents/proptech/src/app/page.tsx
+  76:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/shifil/Documents/proptech/src/app/post/page.tsx
+   4:23  warning  'PlusCircle' is defined but never used                  @typescript-eslint/no-unused-vars
+   8:60  error    Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  22:43  error    Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  39:35  error    Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  62:26  warning  'setActiveListings' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/home/shifil/Documents/proptech/src/app/profile/page.tsx
+   4:154  warning  'ImageIcon' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+  31:7    error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/home/shifil/Documents/proptech/src/app/profile/page.tsx:31:7
+  29 |   useEffect(() => {
+  30 |     if (userProfile && user) {
+> 31 |       setFormData({
+     |       ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  32 |         role: userProfile.role || "owner",
+  33 |         name: userProfile.name || user.displayName || "",
+  34 |         email: userProfile.email || user.email || "",  react-hooks/set-state-in-effect
+
+/home/shifil/Documents/proptech/src/app/properties/page.tsx
+    5:104  warning  'X' is defined but never used                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+    9:60   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   23:43   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   40:35   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  216:107  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  217:88   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  220:103  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  223:101  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  228:96   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  231:105  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  234:102  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  342:24   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/shifil/Documents/proptech/src/app/settings/page.tsx
+  4:48  warning  'Globe' is defined but never used      @typescript-eslint/no-unused-vars
+  4:55  warning  'UserCheck' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/shifil/Documents/proptech/src/components/GoogleLoginButton.tsx
+  20:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/shifil/Documents/proptech/src/components/layout/Navbar.tsx
+    6:20  warning  'useEffect' is defined but never used                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+   78:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  159:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/home/shifil/Documents/proptech/src/context/PreferencesContext.tsx
+  34:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/home/shifil/Documents/proptech/src/context/PreferencesContext.tsx:34:9
+  32 |       const stored = localStorage.getItem("proptech_user_prefs");
+  33 |       if (stored) {
+> 34 |         setPrefsState(JSON.parse(stored));
+     |         ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  35 |       }
+  36 |     } catch (err) {
+  37 |       console.error("Failed to load prefs", err);  react-hooks/set-state-in-effect
+
+/home/shifil/Documents/proptech/src/types/services.ts
+  12:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 28 problems (17 errors, 11 warnings)
+

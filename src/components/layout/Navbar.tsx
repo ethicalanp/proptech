@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Building2, Menu, X, ArrowRight, ChevronDown, LogOut, Settings, User as UserIcon } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { auth } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
@@ -91,6 +91,14 @@ export default function Navbar() {
                     exit={{ opacity: 0, y: 10 }}
                     className="absolute top-12 right-0 w-48 bg-white border border-gray-100 rounded-xl shadow-xl py-2 flex flex-col z-50"
                   >
+                    <Link
+                      href="/profile"
+                      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#408A71] transition-colors"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      <UserIcon size={16} />
+                      Profile
+                    </Link>
                     <Link
                       href="/settings"
                       className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#408A71] transition-colors"
@@ -188,6 +196,14 @@ export default function Navbar() {
 
               {user ? (
                 <>
+                  <Link
+                    href="/profile"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-3 text-lg font-medium p-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
+                  >
+                    <UserIcon size={20} />
+                    Profile
+                  </Link>
                   <Link
                     href="/settings"
                     onClick={() => setIsOpen(false)}

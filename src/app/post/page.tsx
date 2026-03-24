@@ -1,11 +1,12 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
-import { ShieldAlert, PlusCircle, CheckCircle, ChevronDown, Check } from "lucide-react";
+import { ShieldAlert, CheckCircle, ChevronDown, Check } from "lucide-react";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 
-const CustomSelect = ({ label, options, value, onChange }: any) => {
+type SelectOption = { value: string | boolean; label: string };
+const CustomSelect = ({ label, options, value, onChange }: { label: string, options: SelectOption[], value: any, onChange: (val: any) => void }) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -19,7 +20,7 @@ const CustomSelect = ({ label, options, value, onChange }: any) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const selectedOption = options.find((o: any) => o.value === value) || options[0];
+  const selectedOption = options.find((o: SelectOption) => o.value === value) || options[0];
 
   return (
     <div className="relative" ref={ref}>
@@ -36,7 +37,7 @@ const CustomSelect = ({ label, options, value, onChange }: any) => {
       {isOpen && (
         <div className="absolute z-50 w-full mt-2 bg-white/95 backdrop-blur-sm border border-gray-100 rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
           <div className="max-h-60 overflow-y-auto py-1">
-            {options.map((option: any) => (
+            {options.map((option: SelectOption) => (
               <button
                 key={String(option.value)}
                 type="button"
@@ -58,8 +59,8 @@ const CustomSelect = ({ label, options, value, onChange }: any) => {
 };
 
 export default function PostPropertyPage() {
-  const { user, trustProfile } = useAuth();
-  const [activeListings, setActiveListings] = useState(0); // Mocking active listings
+  const { user, userProfile } = useAuth();
+  const [activeListings] = useState(0); // Mocking active listings
 
   const [formState, setFormState] = useState({
     title: "",
@@ -106,25 +107,27 @@ export default function PostPropertyPage() {
   }
 
   // Level 1 Guard
-  if (trustProfile.level === 1) {
+  if (userProfile.level === 1) {
     return (
-      <div className="max-w-3xl mx-auto px-6 py-20 text-center">
-        <div className="bg-orange-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
-          <ShieldAlert className="text-orange-500" size={40} />
+      <div className="min-h-screen bg-gray-50 pt-32 pb-20 text-center">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="bg-orange-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
+            <ShieldAlert className="text-orange-500" size={40} />
+          </div>
+          <h1 className="text-3xl font-extrabold text-gray-900 mb-4">Verification Required</h1>
+          <p className="text-gray-600 text-lg mb-8 max-w-xl mx-auto">
+            To maintain a high-quality marketplace, we require all property owners and agents to verify their phone number before posting listings.
+          </p>
+          <Link href="/profile" className="bg-[#408A71] text-white px-8 py-3.5 rounded-full font-bold shadow-md hover:bg-[#34745c] transition-transform active:scale-95 inline-flex items-center gap-2">
+            Verify Phone via Profile
+          </Link>
         </div>
-        <h1 className="text-3xl font-extrabold text-gray-900 mb-4">Verification Required</h1>
-        <p className="text-gray-600 text-lg mb-8 max-w-xl mx-auto">
-          To maintain a high-quality marketplace, we require all property owners and agents to verify their phone number before posting listings.
-        </p>
-        <Link href="/settings" className="bg-gray-900 text-white px-8 py-3.5 rounded-full font-bold shadow-md hover:bg-gray-800 transition-transform active:scale-95 inline-flex items-center gap-2">
-          Verify Phone via Settings
-        </Link>
       </div>
     );
   }
 
-  // Level 2 Limit Guard
-  if (trustProfile.level === 2 && activeListings >= 2) {
+  // Limit Guard based on Role
+  if (userProfile.role === 'owner' && activeListings >= 2 && userProfile.level < 3) {
     return (
       <div className="min-h-screen bg-gray-50 pt-32 pb-20 text-center">
         <div className="max-w-3xl mx-auto px-6">
@@ -133,11 +136,32 @@ export default function PostPropertyPage() {
           </div>
           <h1 className="text-3xl font-extrabold text-gray-900 mb-4">Listing Limit Reached</h1>
           <p className="text-gray-600 text-lg mb-8 max-w-xl mx-auto">
-            As a Basic Verified user (Level 2), you can only have 2 active listings at a time. To unlock <strong className="text-gray-900 font-black">unlimited listings</strong> and receive a verified badge, please verify your Government ID.
+            As an Individual Owner, you can only have 2 active listings at a time. To unlock <strong className="text-gray-900 font-black">unlimited listings</strong>, please verify your Government ID or Property Proof.
           </p>
           <div className="flex justify-center gap-4">
-            <Link href="/settings" className="bg-[#408A71] text-white px-8 py-3.5 rounded-full font-bold shadow-md hover:bg-[#34745c] transition-transform active:scale-95">
-              Upgrade to ID Verified
+            <Link href="/profile" className="bg-[#408A71] text-white px-8 py-3.5 rounded-full font-bold shadow-md hover:bg-[#34745c] transition-transform active:scale-95">
+              Upgrade Profile
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (userProfile.role === 'agent' && activeListings >= 5 && userProfile.level < 4) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-32 pb-20 text-center">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="bg-white border border-gray-100 shadow-sm w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
+            <ShieldAlert className="text-[#408A71]" size={40} />
+          </div>
+          <h1 className="text-3xl font-extrabold text-gray-900 mb-4">Account Verification Required</h1>
+          <p className="text-gray-600 text-lg mb-8 max-w-xl mx-auto">
+            As an unverified Agent, you are limited to 5 active listings. To post unlimited properties for your clients, please verify your Agency or RERA details in your profile.
+          </p>
+          <div className="flex justify-center gap-4">
+            <Link href="/profile" className="bg-[#408A71] text-white px-8 py-3.5 rounded-full font-bold shadow-md hover:bg-[#34745c] transition-transform active:scale-95">
+              Verify Agency
             </Link>
           </div>
         </div>
@@ -175,8 +199,8 @@ export default function PostPropertyPage() {
         
         <div className="hidden sm:flex items-center gap-2 bg-green-50 px-4 py-2 rounded-xl border border-green-100">
           <CheckCircle className="text-green-600" size={18} />
-          <span className="text-green-800 font-bold text-sm">
-            {trustProfile.level >= 3 ? "Unlimited Listings" : `Level ${trustProfile.level} Active`} 
+          <span className="text-green-800 font-bold text-sm capitalize">
+            {userProfile.role} Account
           </span>
         </div>
       </div>
@@ -191,9 +215,12 @@ export default function PostPropertyPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="col-span-1 md:col-span-2">
               <label className="text-sm font-bold text-gray-700 block mb-2">Listing Type</label>
-              <div className="flex p-1 bg-gray-50 rounded-xl gap-1 border border-gray-200 w-full sm:w-80">
-                <button type="button" onClick={() => setFormState({...formState, type: "rent"})} className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${formState.type === "rent" ? "bg-white text-[#408A71] shadow-sm border border-gray-200/50" : "text-gray-500 hover:text-gray-900"}`}>For Rent</button>
-                <button type="button" onClick={() => setFormState({...formState, type: "sale"})} className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${formState.type === "sale" ? "bg-white text-[#408A71] shadow-sm border border-gray-200/50" : "text-gray-500 hover:text-gray-900"}`}>For Sale</button>
+              <div className="flex p-1 bg-gray-50 rounded-xl gap-1 border border-gray-200 w-full md:w-auto overflow-x-auto">
+                <button type="button" onClick={() => setFormState({...formState, type: "rent"})} className={`min-w-[100px] flex-1 py-2 px-4 text-sm font-semibold rounded-lg transition-all ${formState.type === "rent" ? "bg-white text-[#408A71] shadow-sm border border-gray-200/50" : "text-gray-500 hover:text-gray-900"}`}>For Rent</button>
+                <button type="button" onClick={() => setFormState({...formState, type: "sale"})} className={`min-w-[100px] flex-1 py-2 px-4 text-sm font-semibold rounded-lg transition-all ${formState.type === "sale" ? "bg-white text-[#408A71] shadow-sm border border-gray-200/50" : "text-gray-500 hover:text-gray-900"}`}>For Sale</button>
+                {userProfile.role === 'builder' && (
+                  <button type="button" onClick={() => setFormState({...formState, type: "project"})} className={`min-w-[100px] flex-1 py-2 px-4 text-sm font-semibold rounded-lg transition-all ${formState.type === "project" ? "bg-white text-[#408A71] shadow-sm border border-gray-200/50" : "text-gray-500 hover:text-gray-900"}`}>New Project</button>
+                )}
               </div>
             </div>
 
@@ -203,7 +230,9 @@ export default function PostPropertyPage() {
             </div>
 
             <div>
-              <label className="text-sm font-bold text-gray-700 block mb-2">Price {formState.type === 'rent' ? '(/month)' : ''}</label>
+              <label className="text-sm font-bold text-gray-700 block mb-2">
+                Price {formState.type === 'rent' ? '(/month)' : ''} {formState.type === 'project' ? '(Starting from)' : ''}
+              </label>
               <input required value={formState.price} onChange={e => setFormState({...formState, price: e.target.value})} type="number" placeholder="₹" className="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-xl p-3 outline-none focus:bg-white focus:ring-2 focus:ring-[#408A71]/50 transition-all font-medium" />
             </div>
 
