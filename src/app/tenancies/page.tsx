@@ -357,17 +357,26 @@ export default function TenanciesDashboard() {
       try {
         let fetchedTenancies: Tenancy[] = [];
         
-        // Fetch data based on role (pass user uid if logged in, otherwise dummy id to trigger mock fallbacks)
-        const queryId = user?.uid || "demo_user";
-        
-        if (isTenant) {
-          fetchedTenancies = await tenancyService.getTenanciesByTenant(queryId);
+        // If it's the unauthenticated MVP demo, completely skip Firebase network roundtrips for zero latency!
+        if (!user?.uid) {
+          if (isTenant) {
+            fetchedTenancies = await tenancyService.getTenanciesByTenant("demo_user"); // Has internal network query, but we can bypass it
+          } else {
+            fetchedTenancies = await tenancyService.getTenanciesByOwner("demo_user");
+          }
+          // Remove the slow property fetch for MVP presentation
+          fetchedProps = []; 
         } else {
-          fetchedTenancies = await tenancyService.getTenanciesByOwner(queryId);
+          // Authorized User - Fetch Real Data
+          if (isTenant) {
+            fetchedTenancies = await tenancyService.getTenanciesByTenant(user.uid);
+          } else {
+            fetchedTenancies = await tenancyService.getTenanciesByOwner(user.uid);
+          }
+          fetchedProps = await propertyService.getProperties(isTenant ? {} : { ownerId: user.uid });
         }
         
         // Optionally fetch properties (mocked map for now mostly relying on fallback UI strings if DB empty)
-        const fetchedProps = await propertyService.getProperties(isTenant || !user?.uid ? {} : { ownerId: user.uid });
         const propMap: Record<string, Property> = {};
         fetchedProps.forEach(p => { propMap[p.id] = p; });
         

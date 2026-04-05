@@ -50,6 +50,9 @@ export const propertyService: IPropertyService = {
   },
 
   getProperties: async (filters?: Record<string, unknown>) => {
+    // Zero-latency bypass for MVP mock dashboard
+    if (filters && filters.ownerId === "demo_owner") return [];
+
     try {
       let q = query(collection(db, PROPERTIES_COLLECTION), orderBy("createdAt", "desc"));
       

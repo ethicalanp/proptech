@@ -96,6 +96,7 @@ export const tenancyService = {
   },
 
   getTenanciesByOwner: async (ownerId: string): Promise<Tenancy[]> => {
+    if (ownerId === "demo_user") return [...mockTenancies].sort((a, b) => new Date(b.start_date || 0).getTime() - new Date(a.start_date || 0).getTime());
     try {
       const q = query(
         collection(db, TENANCIES_COLLECTION),
@@ -114,6 +115,7 @@ export const tenancyService = {
   },
 
   getTenanciesByTenant: async (tenantId: string): Promise<Tenancy[]> => {
+    if (tenantId === "demo_user") return [...mockTenantView].sort((a, b) => new Date(b.start_date || 0).getTime() - new Date(a.start_date || 0).getTime());
     try {
       const q = query(
         collection(db, TENANCIES_COLLECTION),
