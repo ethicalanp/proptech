@@ -104,7 +104,7 @@ export default function ProductJourneyPage() {
     <div className="min-h-screen bg-[#FAFAFA] font-sans selection:bg-[#408A71] selection:text-white pb-32">
       
       {/* SECTION 0: HERO */}
-      <section className="relative h-[80vh] flex flex-col items-center justify-center text-center px-6 overflow-hidden bg-gradient-to-br from-white via-gray-50 to-[#408A71]/5">
+      <section className="relative min-h-[80vh] py-32 flex flex-col items-center justify-center text-center px-6 overflow-hidden bg-gradient-to-br from-white via-gray-50 to-[#408A71]/5">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] md:w-[60vw] md:h-[60vw] bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none" />
         
         <div className="z-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out flex flex-col items-center w-full max-w-5xl">
@@ -148,17 +148,21 @@ export default function ProductJourneyPage() {
              <div className="absolute top-1/2 -left-8 md:-left-10 -translate-y-1/2 w-4 h-4 bg-purple-500 rounded-full z-20 shadow-[0_0_15px_rgba(168,85,247,0.6)]" />
              
              {/* Interactive Matching Simulator */}
-             <div className="bg-white rounded-3xl p-8 shadow-2xl border border-gray-100 transform transition-all hover:translate-y-[-5px]">
-                <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
-                  <div>
-                    <h3 className="font-black text-gray-900 text-xl">Algo-Match</h3>
-                    <p className="text-xs font-bold text-gray-400 uppercase mt-1">Tenant ↔ Property</p>
-                  </div>
-                  <div className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border ${isMatching ? 'bg-purple-50 text-purple-600 border-purple-200 animate-pulse' : 'bg-green-50 text-green-600 border-green-200'}`}>
+             <div className="bg-white w-full rounded-3xl shadow-xl shadow-gray-200 border border-gray-100 overflow-hidden transform transition-all hover:translate-y-[-5px]">
+               <div className="bg-gray-900 p-8 text-white relative overflow-hidden flex items-center justify-between border-b border-gray-800 shrink-0">
+                 <div className="absolute top-0 right-0 p-8 opacity-10">
+                    <Search size={120} />
+                 </div>
+                 <div className="relative z-10">
+                   <p className="text-xs font-bold text-purple-400 uppercase tracking-widest mb-2">Tenant ↔ Property</p>
+                   <h3 className="font-black text-2xl mb-1">Algo-Match</h3>
+                 </div>
+                 <div className={`relative z-10 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border shadow-sm ${isMatching ? 'bg-purple-500/20 text-purple-300 border-purple-500/30 animate-pulse' : 'bg-green-500/20 text-green-300 border-green-500/30'}`}>
                     {isMatching ? 'Processing...' : 'Evaluated'}
-                  </div>
-                </div>
+                 </div>
+               </div>
 
+               <div className="p-8">
                 <div className="grid grid-cols-2 gap-4 mb-8">
                   <div className="space-y-3">
                     <p className="text-xs font-bold text-gray-500 uppercase tracking-widest bg-gray-50 p-2 rounded text-center">Tenant</p>
@@ -198,6 +202,7 @@ export default function ProductJourneyPage() {
                      </p>
                    </div>
                 </div>
+               </div>
              </div>
           </div>
         </section>
@@ -220,22 +225,29 @@ export default function ProductJourneyPage() {
              <div className="absolute top-1/2 -left-8 md:right-auto md:-right-10 -translate-y-1/2 w-4 h-4 bg-amber-500 rounded-full z-20 shadow-[0_0_15px_rgba(245,158,11,0.6)]" />
              
              {/* Interactive Trust Ledger */}
-             <div className="w-full bg-white rounded-3xl p-8 shadow-2xl border border-gray-100 flex flex-col gap-6 transform transition-all hover:translate-y-[-5px]">
-               <div className="flex items-center justify-between pb-6 border-b border-gray-100">
-                 <div className="text-left">
-                   <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Live Trust Score</p>
-                   <div className="flex items-end gap-2">
-                     <p className={`text-6xl font-black transition-colors duration-500 tracking-tighter ${isUpdatingScore ? 'text-[#408A71]' : 'text-gray-900'}`}>
-                       {demoScore}
-                     </p>
-                   </div>
+             <div className="bg-white w-full max-w-lg mx-auto rounded-3xl shadow-xl shadow-gray-200 border border-gray-100 overflow-hidden transform transition-all hover:translate-y-[-5px]">
+               <div className="bg-gray-900 p-8 text-white relative overflow-hidden flex justify-between items-center border-b border-gray-800 shrink-0">
+                 <div className="absolute top-0 right-0 p-8 opacity-10">
+                    <Activity size={120} />
                  </div>
-                 <div className={`w-20 h-20 rounded-3xl flex items-center justify-center border-2 shadow-inner transition-colors duration-500 ${demoScore >= 700 ? 'bg-green-50 border-green-200 text-green-500' : demoScore >= 500 ? 'bg-amber-50 border-amber-200 text-amber-500' : 'bg-red-50 border-red-200 text-red-500'}`}>
-                   {demoScore >= 700 ? <ShieldCheck size={40} /> : demoScore >= 500 ? <AlertTriangle size={40} /> : <Lock size={40} />}
+                 <div className="relative z-10 flex flex-col">
+                   <p className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-2">Live Ledger</p>
+                   <h3 className="font-black text-2xl mb-1">Trust Score</h3>
+                 </div>
+                 <div className={`relative z-10 w-16 h-16 rounded-2xl flex items-center justify-center border shadow-inner transition-colors duration-500 ${demoScore >= 700 ? 'bg-green-500/20 border-green-500/30 text-green-400' : demoScore >= 500 ? 'bg-amber-500/20 border-amber-500/30 text-amber-400' : 'bg-red-500/20 border-red-500/30 text-red-400'}`}>
+                   {demoScore >= 700 ? <ShieldCheck size={32} /> : demoScore >= 500 ? <AlertTriangle size={32} /> : <Lock size={32} />}
                  </div>
                </div>
 
-               <div>
+               <div className="p-8 flex flex-col gap-6">
+                 <div className="flex flex-col items-center justify-center pb-6 border-b border-gray-100">
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Current Standing</p>
+                    <p className={`text-[6.5rem] leading-none font-black transition-colors duration-500 tracking-tighter ${isUpdatingScore ? 'text-[#408A71] scale-105 drop-shadow-md' : 'text-gray-900 scale-100'}`}>
+                      {demoScore}
+                    </p>
+                 </div>
+
+                 <div>
                  <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Simulate Behavior</p>
                  <div className="grid grid-cols-2 gap-3">
                    <button onClick={() => addLedgerEvent("On-time Payment", 15)} className="px-4 py-3 bg-white hover:bg-green-50 text-gray-700 hover:text-green-700 rounded-xl text-xs font-bold border border-gray-200 hover:border-green-300 transition-all shadow-sm flex justify-between items-center group">
@@ -256,9 +268,10 @@ export default function ProductJourneyPage() {
                    </button>
                  </div>
                </div>
+              </div>
              </div>
-          </div>
-        </section>
+           </div>
+         </section>
 
         {/* STEP 3: Verification */}
         <section data-section="3" className={`py-32 px-6 relative md:flex md:items-center md:gap-20 transition-all duration-1000 delay-200 ${visibleSections.includes(3) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
@@ -278,7 +291,7 @@ export default function ProductJourneyPage() {
              <div className="absolute top-1/2 -left-8 md:-left-10 -translate-y-1/2 w-4 h-4 bg-blue-500 rounded-full z-20 shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
              
              {/* Detailed Verification Pipeline */}
-             <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-gray-100 overflow-hidden transform transition-all hover:translate-y-[-5px]">
+             <div className="bg-white w-full max-w-lg mx-auto rounded-3xl shadow-xl shadow-gray-200 border border-gray-100 overflow-hidden transform transition-all hover:translate-y-[-5px]">
                <div className="bg-gray-900 p-8 text-white relative overflow-hidden">
                  <div className="absolute top-0 right-0 p-8 opacity-10">
                     <ShieldCheck size={120} />
@@ -343,7 +356,7 @@ export default function ProductJourneyPage() {
                <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-900 text-white rounded-full text-xs font-black tracking-widest uppercase mb-4 shadow-md">
                  <LayoutDashboard size={12} /> Step 4
                </div>
-               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">Tenancy Management</h2>
+               <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 leading-tight">Tenancy Management</h2>
                <p className="text-lg text-gray-600 mb-6 font-medium">
                  Once matched and verified, generate digital agreements, track payment history automatically, and maintain your trust score effortlessly.
                </p>
@@ -354,21 +367,20 @@ export default function ProductJourneyPage() {
              <div className="absolute top-1/2 -left-8 md:right-auto md:-right-10 -translate-y-1/2 w-4 h-4 bg-gray-900 rounded-full z-20 shadow-[0_0_15px_rgba(17,24,39,0.6)]" />
              
              {/* Tenancy Dashboard Simulator */}
-             <div className="w-full bg-white rounded-3xl p-8 shadow-2xl border border-gray-200 flex flex-col gap-6 transform transition-all hover:translate-y-[-5px]">
-               <div className="flex items-center justify-between border-b border-gray-100 pb-5">
-                 <div className="flex items-center gap-4">
-                   <div className="p-3 bg-gray-100 rounded-xl text-gray-700">
-                     <FileSignature size={24} />
-                   </div>
-                   <div>
-                     <p className="text-[10px] font-bold text-[#408A71] uppercase tracking-widest mb-1">Active Tenancy</p>
-                     <h3 className="font-black text-gray-900 text-lg">Skyline Apartments #4B</h3>
-                   </div>
+             <div className="bg-white w-full max-w-lg mx-auto rounded-3xl shadow-xl shadow-gray-200 border border-gray-100 overflow-hidden flex flex-col transform transition-all hover:translate-y-[-5px]">
+               <div className="bg-gray-900 p-8 text-white relative overflow-hidden flex justify-between items-center border-b border-gray-800 shrink-0">
+                 <div className="absolute top-0 right-0 p-8 opacity-10">
+                    <FileSignature size={120} />
                  </div>
-                 <div className="w-3 h-3 bg-green-500 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.6)] animate-pulse"></div>
+                 <div className="relative z-10 flex flex-col">
+                   <p className="text-xs font-bold text-[#408A71] uppercase tracking-widest mb-2">Active Tenancy</p>
+                   <h3 className="font-black text-2xl mb-1">Skyline #4B</h3>
+                 </div>
+                 <div className="relative z-10 w-4 h-4 bg-green-500 rounded-full border-2 border-green-200 shadow-[0_0_15px_rgba(34,197,94,0.8)] animate-pulse"></div>
                </div>
 
-               <div className="grid grid-cols-2 gap-4">
+               <div className="p-8 flex flex-col gap-6">
+                 <div className="grid grid-cols-2 gap-4">
                  <div className="bg-gray-50 p-5 rounded-2xl border border-gray-200">
                    <p className="text-xs text-gray-500 font-bold mb-2 uppercase tracking-wide">Monthly Rent</p>
                    <p className="text-2xl font-black text-gray-900">₹32,500</p>
@@ -386,10 +398,11 @@ export default function ProductJourneyPage() {
                  <button className="flex-1 bg-[#408A71] text-white rounded-xl py-4 text-sm font-bold hover:bg-emerald-600 transition-all shadow-md">
                    Record Payment
                  </button>
+                </div>
                </div>
              </div>
-          </div>
-        </section>
+           </div>
+         </section>
 
       </div>
 
