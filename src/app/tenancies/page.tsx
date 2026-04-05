@@ -351,55 +351,43 @@ export default function TenanciesDashboard() {
   const isTenant = viewModeOverride !== null ? viewModeOverride === 'tenant' : userProfile?.role === 'tenant';
 
   useEffect(() => {
-    if (user?.uid && userProfile) {
-      const fetchData = async () => {
-        try {
-          // Fetch data based on role
-          let fetchedTenancies: Tenancy[] = [];
-          if (isTenant) {
-            fetchedTenancies = await tenancyService.getTenanciesByTenant(user.uid);
-          } else {
-            fetchedTenancies = await tenancyService.getTenanciesByOwner(user.uid);
-          }
-          
-          // Optionally fetch properties (mocked map for now mostly relying on fallback UI strings if DB empty)
-          const fetchedProps = await propertyService.getProperties(isTenant ? {} : { ownerId: user.uid });
-          const propMap: Record<string, Property> = {};
-          fetchedProps.forEach(p => { propMap[p.id] = p; });
-          
-          setTenancies(fetchedTenancies);
-          setPropertyMap(propMap);
-        } catch (error) {
-          console.error("Failed to load tenancies dashboard:", error);
-        } finally {
-          setLoading(false);
+    if (authLoading) return; // Wait for auth to settle (either logged in or anonymous)
+
+    const fetchData = async () => {
+      try {
+        let fetchedTenancies: Tenancy[] = [];
+        
+        // Fetch data based on role (pass user uid if logged in, otherwise dummy id to trigger mock fallbacks)
+        const queryId = user?.uid || "demo_user";
+        
+        if (isTenant) {
+          fetchedTenancies = await tenancyService.getTenanciesByTenant(queryId);
+        } else {
+          fetchedTenancies = await tenancyService.getTenanciesByOwner(queryId);
         }
-      };
-      
-      fetchData();
-    }
-  }, [user, userProfile, isTenant]);
+        
+        // Optionally fetch properties (mocked map for now mostly relying on fallback UI strings if DB empty)
+        const fetchedProps = await propertyService.getProperties(isTenant || !user?.uid ? {} : { ownerId: user.uid });
+        const propMap: Record<string, Property> = {};
+        fetchedProps.forEach(p => { propMap[p.id] = p; });
+        
+        setTenancies(fetchedTenancies);
+        setPropertyMap(propMap);
+      } catch (error) {
+        console.error("Failed to load tenancies dashboard:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
+  }, [user, isTenant, authLoading]);
 
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gray-50 pt-32 pb-20 flex flex-col items-center justify-center">
         <Loader2 className="animate-spin text-[#408A71] mb-4" size={48} />
-        <p className="text-gray-500 font-semibold">Authenticating...</p>
-      </div>
-    );
-  }
-
-  if (!user || !userProfile) {
-    return (
-      <div className="min-h-screen bg-gray-50 pt-32 pb-20 flex flex-col items-center justify-center text-center px-4">
-        <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 max-w-md w-full">
-          <ShieldCheck className="mx-auto text-gray-300 mb-4" size={64} />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Access Restricted</h2>
-          <p className="text-gray-500 mb-6">Please log in to view your tenancy dashboard.</p>
-          <Link href="/login" className="block w-full bg-[#408A71] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#34745c] transition-colors">
-            Log In
-          </Link>
-        </div>
+        <p className="text-gray-500 font-semibold">Loading Dashboard...</p>
       </div>
     );
   }
