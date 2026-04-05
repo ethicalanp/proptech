@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
-import { Search, MapPin, Home as HomeIcon, Building, Key, Clock } from "lucide-react";
+import { Search, MapPin, Home as HomeIcon, Building, Key, Clock, Star, BadgeCheck } from "lucide-react";
+import { getVerificationBadge, VerificationLevel, ProfileRole } from "@/context/AuthContext";
 
 export default function Home() {
   return (
@@ -66,11 +69,16 @@ export default function Home() {
               <div key={item} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group cursor-pointer flex flex-col h-full">
                 <div className="h-64 w-full bg-gray-200 relative overflow-hidden flex items-center justify-center">
                   <div className="absolute top-4 w-full flex justify-between items-start px-4 z-10">
-                    <span className="bg-white/95 backdrop-blur-sm text-[#408A71] text-xs font-bold px-3 py-1.5 rounded-full shadow-sm tracking-wide">
-                      FOR SALE
-                    </span>
+                    <div className="flex gap-2">
+                       <span className="bg-white/95 backdrop-blur-sm text-[#408A71] text-xs font-bold px-3 py-1.5 rounded-full shadow-sm tracking-wide">
+                         FOR RENT
+                       </span>
+                       <span className="bg-green-100 text-green-700 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm tracking-wide uppercase">
+                         Match: {95 - (index * 5)}%
+                       </span>
+                    </div>
                     <span className="bg-gray-900/80 backdrop-blur-sm text-white text-xs font-semibold px-2.5 py-1 rounded-md shadow-sm flex items-center gap-1.5">
-                      <Clock size={12} /> 3 Days Ago
+                      <Clock size={12} /> {index + 1} Days Ago
                     </span>
                   </div>
                   <img src={imageSrc} alt="Property" className="w-full h-full object-cover z-0 transition-transform duration-500 group-hover:scale-105" />
@@ -84,8 +92,18 @@ export default function Home() {
                     <p className="text-gray-500 text-sm mb-4 flex items-center gap-1.5 line-clamp-1">
                       <MapPin size={16} className="shrink-0" /> PT Usha Road, Kozhikode, Kerala
                     </p>
-                    <div className="text-2xl font-extrabold text-[#408A71] mb-6">
-                      ₹45,00,000
+                    <div className="text-2xl font-extrabold text-[#408A71] mb-2">
+                      ₹{45000 - (index * 5000)} <span className="text-sm text-gray-400 font-medium">/mo</span>
+                    </div>
+                    
+                    {/* Verification Badges */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <div className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider ${getVerificationBadge((3 - index) as VerificationLevel, 'owner' as ProfileRole).bg}`}>
+                        <span>{getVerificationBadge((3 - index) as VerificationLevel, 'owner' as ProfileRole).icon}</span> {getVerificationBadge((3 - index) as VerificationLevel, 'owner' as ProfileRole).label}
+                      </div>
+                      <div className="inline-flex items-center gap-1 bg-yellow-50 text-yellow-700 text-[10px] font-bold px-2 py-0.5 rounded border border-yellow-100 uppercase tracking-wider">
+                          <Star size={12} className="text-yellow-500" /> Trust Score: {850 - (index * 100)}
+                      </div>
                     </div>
                   </div>
                   

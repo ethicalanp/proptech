@@ -12,7 +12,7 @@ import { useAuth } from "@/context/AuthContext";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/properties", label: "Properties" },
-  { href: "/smart-match", label: "Smart Match" },
+  { href: "/compatibility", label: "Compatibility Score" },
   { href: "/verification", label: "Verification & Trust" },
   { href: "/tenancies", label: "Tenancies" },
   { href: "/product-journey", label: "Product Journey" },
@@ -67,9 +67,9 @@ export default function Navbar() {
 
         {/* Actions */}
         <div className="hidden md:flex items-center gap-4">
-          <Link href="/post" className="text-sm font-bold text-[#408A71] bg-white hover:bg-gray-50 px-5 py-2.5 rounded-full transition-colors border border-gray-200 shadow-sm">
+          {/* <Link href="/post" className="text-sm font-bold text-[#408A71] bg-white hover:bg-gray-50 px-5 py-2.5 rounded-full transition-colors border border-gray-200 shadow-sm">
             List Property
-          </Link>
+          </Link> */}
           <div className="relative">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -193,8 +193,8 @@ export default function Navbar() {
                   href={link.href}
                   onClick={() => setIsOpen(false)}
                   className={`text-lg font-medium p-3 rounded-lg transition-colors ${pathname === link.href
-                      ? "bg-green-50 text-[#408A71]"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    ? "bg-green-50 text-[#408A71]"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                     }`}
                 >
                   {link.label}

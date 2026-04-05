@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ShieldCheck, ChevronDown, CheckCircle2, Lock, Star, Building, User, RefreshCw, LayoutDashboard, Search, SlidersHorizontal, HeartHandshake, Clock, FileSignature } from "lucide-react";
+import { ShieldCheck, ChevronDown, CheckCircle2, Lock, Star, Search, HeartHandshake, FileSignature, Key, Activity, ActivityIcon, Link as LinkIcon, Camera, UploadCloud, Clock, IndianRupee, Bell, AlertTriangle, User as UserIcon, Building, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { getVerificationBadge } from "@/context/AuthContext";
 
@@ -34,7 +34,7 @@ export default function ProductJourneyPage() {
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimStep((prev) => (prev + 1) % 3);
-    }, 2500);
+    }, 3000); 
     return () => clearInterval(interval);
   }, []);
 
@@ -44,21 +44,24 @@ export default function ProductJourneyPage() {
       badge: getVerificationBadge(2, 'owner'), 
       action: "Level 1: Basic Identity", 
       details: "Mobile OTP + Email Verification",
-      docs: ["Valid Phone Number", "Email Access"]
+      docs: ["Valid Phone Number", "Email Access"],
+      icon: <LinkIcon size={20} className="text-[#408A71]" />
     },
     { 
-      score: 600, 
+      score: 650, 
       badge: getVerificationBadge(3, 'owner'), 
       action: "Level 2: Trusted Member", 
       details: "Government Issued identity",
-      docs: ["Aadhar / PAN Card", "Live Selfie Match"]
+      docs: ["Aadhar / PAN Card", "Live Selfie Match"],
+      icon: <Camera size={20} className="text-[#408A71]" />
     },
     { 
-      score: 750, 
+      score: 850, 
       badge: getVerificationBadge(4, 'owner'), 
-      action: "Level 3: Business Pro", 
+      action: "Level 3: Power Lister", 
       details: "Commercial & Licensing Depth",
-      docs: ["RERA License", "GST Registration"]
+      docs: ["RERA License", "Property Title Verification"],
+      icon: <UploadCloud size={20} className="text-[#408A71]" />
     },
   ];
 
@@ -74,7 +77,6 @@ export default function ProductJourneyPage() {
     const newEvent = { action, impact, id: Date.now() };
     setLedger(prev => [newEvent, ...prev].slice(0, 5));
     
-    // Animate score change
     setTimeout(() => {
       setDemoScore(prev => Math.min(900, Math.max(300, prev + impact)));
       setIsUpdatingScore(false);
@@ -99,284 +101,234 @@ export default function ProductJourneyPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] font-sans selection:bg-[#408A71] selection:text-white">
+    <div className="min-h-screen bg-[#FAFAFA] font-sans selection:bg-[#408A71] selection:text-white pb-32">
       
       {/* SECTION 0: HERO */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] md:w-[40vw] md:h-[40vw] bg-[#408A71]/10 blur-[100px] rounded-full pointer-events-none" />
+      <section className="relative h-[80vh] flex flex-col items-center justify-center text-center px-6 overflow-hidden bg-gradient-to-br from-white via-gray-50 to-[#408A71]/5">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] md:w-[60vw] md:h-[60vw] bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none" />
         
-        <div className="z-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out flex flex-col items-center w-full max-w-4xl">
-          <div className="p-4 bg-white rounded-full shadow-sm border border-gray-100 mb-8">
-            <HeartHandshake className="text-[#408A71]" size={48} />
+        <div className="z-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out flex flex-col items-center w-full max-w-5xl">
+          <div className="p-5 bg-white rounded-3xl shadow-lg border border-gray-100 mb-8 transform -rotate-3 hover:rotate-0 transition-transform">
+            <HeartHandshake className="text-[#408A71]" size={56} />
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tight leading-tight mb-8">
-            Find homes you can <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#408A71] to-emerald-400">trust</span>.
+          <h1 className="text-5xl md:text-8xl font-black text-gray-900 tracking-tight leading-tight mb-8">
+            The standard for <br className="hidden md:block"/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#408A71] to-emerald-400">verified reality</span>.
           </h1>
-
-          {/* Search Bar UI Mock */}
-          <div className="bg-white p-4 rounded-full shadow-xl shadow-gray-200/50 border border-gray-100 flex items-center justify-between w-full max-w-2xl transform hover:scale-[1.02] transition-transform">
-             <div className="flex flex-1 items-center gap-3 px-4">
-               <Search className="text-gray-400" size={24} />
-               <div className="text-left">
-                 <p className="text-sm font-bold text-gray-900">Search</p>
-                 <p className="text-xs text-gray-500">Anywhere • Any Budget</p>
-               </div>
-             </div>
-             <div className="bg-[#408A71] text-white p-4 rounded-full shadow-md cursor-pointer hover:bg-emerald-600 transition-colors">
-               <Search size={24} />
-             </div>
-          </div>
+          <p className="text-lg md:text-2xl text-gray-500 font-medium max-w-2xl mx-auto">
+            A comprehensive ecosystem of trust, dynamic scoring, and intelligent matchmaking. Built for the modern real estate economy.
+          </p>
         </div>
 
-        <div className="absolute bottom-12 flex flex-col items-center text-gray-400 animate-bounce">
-          <p className="text-xs font-bold uppercase tracking-widest mb-2">The Journey Starts Here</p>
-          <ChevronDown size={24} />
+        <div className="absolute bottom-8 flex flex-col items-center text-[#408A71] animate-bounce cursor-pointer">
+          <p className="text-[10px] font-black uppercase tracking-widest mb-2 opacity-70">The Journey</p>
+          <ChevronDown size={28} />
         </div>
       </section>
 
       {/* STRIP: Timeline */}
-      <div className="relative max-w-5xl mx-auto border-l-2 border-gray-200/50 ml-12 md:ml-auto md:border-l-0">
+      <div className="relative max-w-6xl mx-auto border-l-2 border-dashed border-gray-200 ml-8 md:ml-auto md:border-l-0">
 
-        {/* SECTION 1: Smart Search & Matching */}
-        <section data-section="1" className={`py-32 px-6 relative md:flex md:items-center md:gap-16 transition-all duration-1000 ${visibleSections.includes(1) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+        {/* STEP 1: Smart Matching System */}
+        <section data-section="1" className={`py-32 px-6 relative md:flex md:items-center md:gap-20 transition-all duration-1000 ${visibleSections.includes(1) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
           <div className="md:w-1/2 mb-12 md:mb-0 relative z-10">
             <div className="md:text-right pr-0 md:pr-12">
-               <span className="text-[#408A71] font-black text-xl mb-2 block tracking-widest uppercase">Step 1</span>
-               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Smart Search & Matching</h2>
-               <p className="text-xl text-gray-500 italic border-l-4 md:border-l-0 md:border-r-4 border-gray-300 pl-4 md:pl-0 md:pr-4">
-                 “Not just listings — we match what fits you.”
+               <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-black tracking-widest uppercase mb-4 border border-purple-200">
+                 <Key size={12} /> Step 1
+               </div>
+               <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 leading-tight">Smart Matching System</h2>
+               <p className="text-lg text-gray-600 mb-6 font-medium">
+                 We compare property rules, tenant profiles, and lifestyle preferences to generate an accurate compatibility rating, saving thousands of hours in negotiation.
                </p>
             </div>
           </div>
 
           <div className="md:w-1/2 relative">
-             <div className="absolute top-1/2 -left-12 md:-left-8 -translate-y-1/2 w-6 h-6 bg-white border-4 border-gray-300 rounded-full z-20 shadow-sm" />
+             <div className="absolute top-1/2 -left-8 md:-left-10 -translate-y-1/2 w-4 h-4 bg-purple-500 rounded-full z-20 shadow-[0_0_15px_rgba(168,85,247,0.6)]" />
              
              {/* Interactive Matching Simulator */}
-             <div className="bg-white rounded-[2rem] p-8 shadow-2xl border border-gray-100 transform transition-all hover:scale-[1.02]">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="font-bold text-gray-900">Algo-Match Simulator</h3>
-                  <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${isMatching ? 'bg-amber-100 text-amber-700 animate-pulse' : 'bg-green-100 text-green-700'}`}>
-                    {isMatching ? 'Calculating...' : 'Ready'}
+             <div className="bg-white rounded-3xl p-8 shadow-2xl border border-gray-100 transform transition-all hover:translate-y-[-5px]">
+                <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
+                  <div>
+                    <h3 className="font-black text-gray-900 text-xl">Algo-Match</h3>
+                    <p className="text-xs font-bold text-gray-400 uppercase mt-1">Tenant ↔ Property</p>
+                  </div>
+                  <div className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border ${isMatching ? 'bg-purple-50 text-purple-600 border-purple-200 animate-pulse' : 'bg-green-50 text-green-600 border-green-200'}`}>
+                    {isMatching ? 'Processing...' : 'Evaluated'}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 mb-8">
-                  <div className="space-y-2">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Tenant Traits</p>
+                <div className="grid grid-cols-2 gap-4 mb-8">
+                  <div className="space-y-3">
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest bg-gray-50 p-2 rounded text-center">Tenant</p>
                     {tenantTraits.map(trait => (
                       <button
                         key={trait}
                         onClick={() => simulateMatch(trait)}
                         disabled={isMatching}
-                        className={`w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition-all border ${activeTraits.includes(trait) ? 'bg-[#408A71] text-white border-[#408A71] shadow-md' : 'bg-gray-50 text-gray-500 border-gray-100 hover:border-gray-200'}`}
+                        className={`w-full text-left px-4 py-2.5 rounded-xl text-xs font-bold transition-all border ${activeTraits.includes(trait) ? 'bg-purple-600 text-white border-purple-600 shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:border-purple-300'}`}
                       >
                         {trait}
                       </button>
                     ))}
                   </div>
-                  <div className="space-y-2">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Matches Prefs</p>
+                  <div className="space-y-3">
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest bg-gray-50 p-2 rounded text-center">Owner Rules</p>
                     {landlordPrefs.map((pref, i) => (
-                      <div key={pref} className={`px-3 py-2 rounded-xl text-xs font-semibold border flex items-center justify-between ${activeTraits.includes(tenantTraits[i]) ? 'bg-white text-gray-900 border-[#408A71]/30 shadow-sm' : 'bg-gray-50/50 text-gray-300 border-gray-50'}`}>
+                      <div key={pref} className={`px-4 py-2.5 rounded-xl text-xs font-bold border flex items-center justify-between transition-all ${activeTraits.includes(tenantTraits[i]) ? 'bg-purple-50 text-purple-900 border-purple-200 shadow-inner' : 'bg-gray-50/50 text-gray-400 border-gray-100'}`}>
                         {pref}
-                        {activeTraits.includes(tenantTraits[i]) && <CheckCircle2 size={12} className="text-[#408A71]" />}
+                        {activeTraits.includes(tenantTraits[i]) && <CheckCircle2 size={16} className="text-purple-600" />}
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="relative w-full h-32 bg-gray-900 rounded-2xl border border-gray-100 flex items-center justify-center p-6 overflow-hidden">
-                   {/* Background pulse when matching */}
-                   {isMatching && <div className="absolute inset-0 bg-[#408A71]/20 animate-pulse" />}
+                <div className="relative w-full bg-gray-900 rounded-2xl border border-gray-800 flex items-center justify-between p-6 overflow-hidden shadow-inner">
+                   {isMatching && <div className="absolute inset-0 bg-purple-500/20 animate-pulse" />}
                    
-                   <div className="z-10 flex flex-col items-center">
-                     <p className="text-[10px] font-bold text-[#408A71] uppercase tracking-widest mb-1">Compatibility Score</p>
-                     <p className={`text-5xl font-black transition-all ${matchScore > 70 ? 'text-white' : matchScore > 40 ? 'text-amber-400' : 'text-red-400'}`}>
+                   <div>
+                     <p className="text-xs font-bold text-purple-400 uppercase tracking-widest mb-1">Final Compatibility</p>
+                     <p className="text-sm font-medium text-gray-400">System Recommendation</p>
+                   </div>
+                   
+                   <div className="flex flex-col items-end">
+                     <p className={`text-5xl font-black transition-all ${matchScore > 70 ? 'text-green-400' : matchScore > 40 ? 'text-amber-400' : 'text-red-400'}`}>
                        {matchScore}%
                      </p>
-                     <div className="w-full max-w-[120px] h-1.5 bg-gray-800 rounded-full mt-3 overflow-hidden">
-                        <div className="h-full bg-[#408A71] transition-all duration-1000" style={{ width: `${matchScore}%` }} />
-                     </div>
                    </div>
                 </div>
              </div>
           </div>
         </section>
 
-        {/* SECTION 2: Trust Score Introduction */}
-        <section data-section="2" className={`py-32 px-6 relative md:flex md:items-center md:flex-row-reverse md:gap-16 transition-all duration-1000 delay-100 ${visibleSections.includes(2) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+        {/* STEP 2: Trust Score */}
+        <section data-section="2" className={`py-32 px-6 relative md:flex md:items-center md:flex-row-reverse md:gap-20 transition-all duration-1000 delay-100 ${visibleSections.includes(2) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
           <div className="md:w-1/2 mb-12 md:mb-0 relative z-10">
             <div className="pl-0 md:pl-12">
-               <span className="text-[#408A71] font-black text-xl mb-2 block tracking-widest uppercase">Step 2</span>
-               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Trust Scores</h2>
-               <p className="text-xl text-gray-500 italic border-l-4 border-gray-300 pl-4">
-                 “Because matching is not enough — trust matters.”
+               <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-50 text-amber-700 rounded-full text-xs font-black tracking-widest uppercase mb-4 border border-amber-200">
+                 <Star size={12} fill="currentColor" /> Step 2
+               </div>
+               <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 leading-tight">Trust Score</h2>
+               <p className="text-lg text-gray-600 mb-6 font-medium">
+                 Your behavior shapes your real estate reputation. A real-time ledger that rewards good tenants and accountable landlords. High trust scores dominate the algorithm.
                </p>
             </div>
           </div>
 
           <div className="md:w-1/2 relative flex justify-end">
-             <div className="absolute top-1/2 -left-12 md:right-auto md:-right-8 -translate-y-1/2 w-6 h-6 bg-white border-4 border-gray-300 rounded-full z-20 shadow-sm" />
+             <div className="absolute top-1/2 -left-8 md:right-auto md:-right-10 -translate-y-1/2 w-4 h-4 bg-amber-500 rounded-full z-20 shadow-[0_0_15px_rgba(245,158,11,0.6)]" />
              
              {/* Interactive Trust Ledger */}
-             <div className="w-full bg-white rounded-[2rem] p-8 shadow-2xl border border-gray-100 flex flex-col gap-6 transform transition-all hover:scale-[1.02]">
-               <div className="flex items-center justify-between">
+             <div className="w-full bg-white rounded-3xl p-8 shadow-2xl border border-gray-100 flex flex-col gap-6 transform transition-all hover:translate-y-[-5px]">
+               <div className="flex items-center justify-between pb-6 border-b border-gray-100">
                  <div className="text-left">
-                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Dynamic Trust Score</p>
+                   <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Live Trust Score</p>
                    <div className="flex items-end gap-2">
-                     <p className={`text-6xl font-black transition-all duration-500 ${isUpdatingScore ? 'scale-110 text-[#408A71]' : 'text-gray-900'}`}>
+                     <p className={`text-6xl font-black transition-colors duration-500 tracking-tighter ${isUpdatingScore ? 'text-[#408A71]' : 'text-gray-900'}`}>
                        {demoScore}
                      </p>
-                     <p className="text-sm font-bold text-gray-400 mb-2">/ 900</p>
                    </div>
                  </div>
-                 <div className={`w-16 h-16 rounded-2xl flex items-center justify-center border-2 ${demoScore >= 700 ? 'bg-green-50 border-green-200 text-green-600' : demoScore >= 500 ? 'bg-amber-50 border-amber-200 text-amber-600' : 'bg-red-50 border-red-200 text-red-600'}`}>
-                   <Star size={32} fill="currentColor" />
+                 <div className={`w-20 h-20 rounded-3xl flex items-center justify-center border-2 shadow-inner transition-colors duration-500 ${demoScore >= 700 ? 'bg-green-50 border-green-200 text-green-500' : demoScore >= 500 ? 'bg-amber-50 border-amber-200 text-amber-500' : 'bg-red-50 border-red-200 text-red-500'}`}>
+                   {demoScore >= 700 ? <ShieldCheck size={40} /> : demoScore >= 500 ? <AlertTriangle size={40} /> : <Lock size={40} />}
                  </div>
                </div>
 
-               <div className="grid grid-cols-2 gap-2">
-                 <button onClick={() => addLedgerEvent("On-time Payment", 15)} className="px-3 py-2 bg-green-50 hover:bg-green-100 text-green-700 rounded-xl text-[10px] font-bold border border-green-100 transition-colors">+15 On-time</button>
-                 <button onClick={() => addLedgerEvent("Early Payment", 25)} className="px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-xl text-[10px] font-bold border border-emerald-100 transition-colors">+25 Early</button>
-                 <button onClick={() => addLedgerEvent("Late Payment", -25)} className="px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-xl text-[10px] font-bold border border-amber-100 transition-colors">-25 Late</button>
-                 <button onClick={() => addLedgerEvent("Missed Payment", -50)} className="px-3 py-2 bg-red-50 hover:bg-red-100 text-red-700 rounded-xl text-[10px] font-bold border border-red-100 transition-colors">-50 Missed</button>
-               </div>
-
-               <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 min-h-[120px]">
-                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Live Behavior Ledger</p>
-                 <div className="space-y-2">
-                   {ledger.length === 0 ? (
-                     <p className="text-xs text-gray-400 italic py-4">Click buttons above to simulate behavior...</p>
-                   ) : (
-                     ledger.map(event => (
-                       <div key={event.id} className="flex items-center justify-between animate-in slide-in-from-top-2 fade-in duration-300">
-                         <span className="text-xs font-semibold text-gray-600">{event.action}</span>
-                         <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${event.impact > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                           {event.impact > 0 ? '+' : ''}{event.impact}
-                         </span>
-                       </div>
-                     ))
-                   )}
+               <div>
+                 <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Simulate Behavior</p>
+                 <div className="grid grid-cols-2 gap-3">
+                   <button onClick={() => addLedgerEvent("On-time Payment", 15)} className="px-4 py-3 bg-white hover:bg-green-50 text-gray-700 hover:text-green-700 rounded-xl text-xs font-bold border border-gray-200 hover:border-green-300 transition-all shadow-sm flex justify-between items-center group">
+                      <span>On-time Payment</span>
+                      <span className="text-green-600 bg-green-100 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">+15</span>
+                   </button>
+                   <button onClick={() => addLedgerEvent("Complete KYC", 50)} className="px-4 py-3 bg-white hover:bg-emerald-50 text-gray-700 hover:text-emerald-700 rounded-xl text-xs font-bold border border-gray-200 hover:border-emerald-300 transition-all shadow-sm flex justify-between items-center group">
+                      <span>Complete KYC</span>
+                      <span className="text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">+50</span>
+                   </button>
+                   <button onClick={() => addLedgerEvent("Late Payment", -25)} className="px-4 py-3 bg-white hover:bg-amber-50 text-gray-700 hover:text-amber-700 rounded-xl text-xs font-bold border border-gray-200 hover:border-amber-300 transition-all shadow-sm flex justify-between items-center group">
+                      <span>Late Payment</span>
+                      <span className="text-amber-600 bg-amber-100 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">-25</span>
+                   </button>
+                   <button onClick={() => addLedgerEvent("Property Damage", -100)} className="px-4 py-3 bg-white hover:bg-red-50 text-gray-700 hover:text-red-700 rounded-xl text-xs font-bold border border-gray-200 hover:border-red-300 transition-all shadow-sm flex justify-between items-center group">
+                      <span>Property Damage</span>
+                      <span className="text-red-600 bg-red-100 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">-100</span>
+                   </button>
                  </div>
                </div>
              </div>
           </div>
         </section>
 
-        {/* SECTION 3: Decision Comparison */}
-        <section data-section="3" className={`py-32 px-6 relative md:flex md:items-center md:gap-16 transition-all duration-1000 delay-200 ${visibleSections.includes(3) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+        {/* STEP 3: Verification */}
+        <section data-section="3" className={`py-32 px-6 relative md:flex md:items-center md:gap-20 transition-all duration-1000 delay-200 ${visibleSections.includes(3) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
           <div className="md:w-1/2 mb-12 md:mb-0 relative z-10">
             <div className="md:text-right pr-0 md:pr-12">
-               <span className="text-[#408A71] font-black text-xl mb-2 block tracking-widest uppercase">Step 3</span>
-               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Decision Making</h2>
-               <p className="text-xl text-gray-500 italic border-l-4 md:border-l-0 md:border-r-4 border-gray-300 pl-4 md:pl-0 md:pr-4">
-                 “Users naturally choose trust.”
+               <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-black tracking-widest uppercase mb-4 border border-blue-200">
+                 <ShieldCheck size={12} /> Step 3
+               </div>
+               <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 leading-tight">Verification</h2>
+               <p className="text-lg text-gray-600 mb-6 font-medium">
+                 Robust KYC integration prevents fraud. The higher your verification tier, the more trust you unlock in the ecosystem. Verify to boost your score and get premium listings.
                </p>
             </div>
           </div>
 
           <div className="md:w-1/2 relative">
-             <div className="absolute top-1/2 -left-12 md:-left-8 -translate-y-1/2 w-6 h-6 bg-white border-4 border-gray-300 rounded-full z-20 shadow-sm" />
-             
-             <div className="flex flex-col gap-4">
-               {/* Owner A (Unverified) */}
-               <div className="bg-white p-5 rounded-3xl border border-gray-200 shadow-sm opacity-50 grayscale flex items-center gap-4 transition-all hover:grayscale-0 hover:opacity-100">
-                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
-                    <User className="text-gray-400" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-bold text-gray-900">Landlord A</h4>
-                    <div className="flex gap-2 mt-2">
-                       <span className="bg-red-50 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded border border-red-100">⚠️ Unverified</span>
-                       <span className="bg-yellow-50 text-yellow-700 text-[10px] font-bold px-2 py-0.5 rounded border border-yellow-200"><Star size={10} className="inline mr-1" />550</span>
-                    </div>
-                  </div>
-               </div>
-
-               <div className="text-center font-black text-gray-300">VS</div>
-
-               {/* Owner B (Verified) */}
-               <div className="bg-white p-5 rounded-3xl border-2 border-[#408A71] shadow-xl shadow-[#408A71]/10 flex items-center gap-4 transform scale-105 z-10 transition-all hover:scale-110 cursor-pointer">
-                  <div className="w-16 h-16 bg-[#408A71]/10 rounded-full flex items-center justify-center text-[#408A71]">
-                    <CheckCircle2 size={32} />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-bold text-gray-900 text-lg">Landlord B</h4>
-                    <div className="flex gap-2 mt-2">
-                       <span className="bg-green-50 text-[#408A71] text-[10px] font-bold px-2 py-0.5 rounded border border-green-200">✅ Verified</span>
-                       <span className="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-200"><Star size={10} className="inline mr-1" />820</span>
-                    </div>
-                  </div>
-               </div>
-             </div>
-          </div>
-        </section>
-
-        {/* SECTION 4: Verification System (Animated) */}
-        <section data-section="4" className={`py-32 px-6 relative md:flex md:items-center md:flex-row-reverse md:gap-16 transition-all duration-1000 delay-300 ${visibleSections.includes(4) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
-          <div className="md:width-1/2 mb-12 md:mb-0 relative z-10">
-            <div className="pl-0 md:pl-12">
-               <span className="text-[#408A71] font-black text-xl mb-2 block tracking-widest uppercase">Step 4</span>
-               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Verification System</h2>
-               <p className="text-xl text-gray-500 italic border-l-4 border-gray-300 pl-4">
-                 “Trust is verified, not assumed.”
-               </p>
-            </div>
-          </div>
-
-          <div className="md:w-1/2 relative flex justify-end">
-             <div className="absolute top-1/2 -left-12 md:right-auto md:-right-8 -translate-y-1/2 w-6 h-6 bg-white border-4 border-gray-300 rounded-full z-20 shadow-sm" />
+             <div className="absolute top-1/2 -left-8 md:-left-10 -translate-y-1/2 w-4 h-4 bg-blue-500 rounded-full z-20 shadow-[0_0_15px_rgba(59,130,246,0.6)]" />
              
              {/* Detailed Verification Pipeline */}
-             <div className="bg-white w-full max-w-md rounded-[2.5rem] p-0 shadow-2xl border border-gray-100 overflow-hidden transform transition-all hover:scale-[1.02]">
-               <div className="bg-gray-900 p-6 text-white flex items-center justify-between">
-                 <div>
-                   <p className="text-[10px] font-bold text-[#408A71] uppercase tracking-widest mb-1">Verification Engine</p>
-                   <h3 className="font-bold text-lg">Multi-Tier Pipeline</h3>
+             <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-gray-100 overflow-hidden transform transition-all hover:translate-y-[-5px]">
+               <div className="bg-gray-900 p-8 text-white relative overflow-hidden">
+                 <div className="absolute top-0 right-0 p-8 opacity-10">
+                    <ShieldCheck size={120} />
                  </div>
-                 <div className="bg-[#408A71] p-3 rounded-2xl shadow-lg shadow-[#408A71]/20">
-                   <ShieldCheck size={24} />
+                 <div className="relative z-10">
+                   <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-2">Automated KYC Engine</p>
+                   <h3 className="font-black text-2xl mb-1">Identity Pipeline</h3>
                  </div>
                </div>
 
                <div className="p-8">
-                 <div className="flex items-center justify-between mb-8">
+                 <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-100">
                    <div className="flex flex-col">
-                     <p className="text-3xl font-black text-gray-900 leading-none">{currentBadgeState.score}</p>
-                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Trust Rating</p>
+                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Target Score Tier</p>
+                     <p className="text-4xl font-black text-gray-900 leading-none">{currentBadgeState.score}</p>
                    </div>
-                   <div className={`px-4 py-2 rounded-2xl font-bold text-sm ${currentBadgeState.badge.bg} flex items-center gap-2`}>
+                   <div className={`px-5 py-2.5 rounded-full font-bold text-sm ${currentBadgeState.badge.bg} shadow-sm flex items-center gap-2`}>
                      {currentBadgeState.badge.icon} {currentBadgeState.badge.label}
                    </div>
                  </div>
 
                  <div className="space-y-6">
                    <div className="relative">
-                     <div className="flex items-center gap-4 mb-2">
-                        <div className="w-8 h-8 bg-[#408A71]/10 rounded-full flex items-center justify-center text-[#408A71] font-bold text-xs ring-4 ring-white">
-                          {animStep + 1}
+                     <div className="flex items-center gap-4 mb-3">
+                        <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center font-black shadow-inner border border-blue-100">
+                          {currentBadgeState.icon}
                         </div>
-                        <p className="font-bold text-gray-900">{currentBadgeState.action}</p>
+                        <div>
+                          <p className="font-bold text-gray-900 text-lg">{currentBadgeState.action}</p>
+                          <p className="text-xs text-gray-500 font-medium">{currentBadgeState.details}</p>
+                        </div>
                      </div>
-                     <p className="text-xs text-gray-500 ml-12 mb-4">{currentBadgeState.details}</p>
                      
-                     <div className="ml-12 grid grid-cols-1 gap-2">
+                     <div className="ml-14 grid grid-cols-1 gap-2 mt-4">
                         {currentBadgeState.docs.map(doc => (
-                          <div key={doc} className="flex items-center gap-2 text-[10px] font-bold text-gray-600 bg-gray-50 px-3 py-2 rounded-lg border border-gray-100">
-                            <CheckCircle2 size={12} className="text-[#408A71]" />
+                          <div key={doc} className="flex items-center gap-3 text-xs font-bold text-gray-700 bg-gray-50 px-4 py-3 rounded-xl border border-gray-200">
+                            <CheckCircle2 size={16} className="text-blue-500" />
                             {doc}
                           </div>
                         ))}
                      </div>
                    </div>
 
-                   <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                   <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden mt-8">
                      <div 
-                       className="h-full bg-[#408A71] transition-all duration-1000 ease-out" 
+                       className="h-full bg-blue-500 transition-all duration-1000 ease-out relative" 
                        style={{ width: `${(animStep + 1) * 33.33}%` }} 
-                     />
+                     >
+                       <div className="absolute inset-0 bg-white/30 animate-[subtlePulse_2s_ease-in-out_infinite]" />
+                     </div>
                    </div>
                  </div>
                </div>
@@ -384,93 +336,55 @@ export default function ProductJourneyPage() {
           </div>
         </section>
 
-        {/* SECTION 5: Incentive System */}
-        <section data-section="5" className={`py-32 px-6 relative md:flex md:items-center md:gap-16 transition-all duration-1000 delay-400 ${visibleSections.includes(5) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
+        {/* STEP 4: Tenancy Management */}
+        <section data-section="4" className={`py-32 px-6 relative md:flex md:items-center md:flex-row-reverse md:gap-20 transition-all duration-1000 delay-300 ${visibleSections.includes(4) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
           <div className="md:w-1/2 mb-12 md:mb-0 relative z-10">
-             <div className="md:text-right pr-0 md:pr-12">
-               <span className="text-[#408A71] font-black text-xl mb-2 block tracking-widest uppercase">Step 5</span>
-               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Incentive System</h2>
-               <p className="text-xl text-gray-500 italic border-l-4 md:border-l-0 md:border-r-4 border-gray-300 pl-4 md:pl-0 md:pr-4">
-                 “Trust unlocks opportunity.”
+             <div className="pl-0 md:pl-12">
+               <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-900 text-white rounded-full text-xs font-black tracking-widest uppercase mb-4 shadow-md">
+                 <LayoutDashboard size={12} /> Step 4
+               </div>
+               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">Tenancy Management</h2>
+               <p className="text-lg text-gray-600 mb-6 font-medium">
+                 Once matched and verified, generate digital agreements, track payment history automatically, and maintain your trust score effortlessly.
                </p>
              </div>
-          </div>
-
-          <div className="md:w-1/2 relative">
-             <div className="absolute top-1/2 -left-12 md:-left-8 -translate-y-1/2 w-6 h-6 bg-white border-4 border-[#408A71] rounded-full z-20 shadow-md shadow-[#408A71]/20" />
-             
-             {/* Locked Override UI */}
-             <div className="w-full max-w-sm rounded-[2rem] overflow-hidden shadow-xl border border-gray-200 relative transform transition-transform hover:-translate-y-2">
-               <div className="p-6 bg-white opacity-40 blur-[2px] pointer-events-none">
-                 <div className="flex items-center gap-2 mb-4">
-                   <LayoutDashboard className="text-gray-400" /> <span className="font-bold text-gray-900">Post Property (3/2)</span>
-                 </div>
-                 <div className="w-full h-10 bg-gray-200 rounded-lg mb-3"></div>
-                 <div className="w-3/4 h-10 bg-gray-200 rounded-lg mb-3"></div>
-                 <div className="w-full h-24 bg-gray-200 rounded-lg mb-3"></div>
-               </div>
-
-               {/* Lock Modal */}
-               <div className="absolute inset-0 bg-white/80 flex flex-col items-center justify-center p-6 text-center backdrop-blur-sm">
-                 <div className="w-16 h-16 bg-gray-900 rounded-full flex items-center justify-center mb-4 shadow-lg text-white">
-                   <Lock size={24} />
-                 </div>
-                 <h3 className="text-xl font-bold text-gray-900 mb-2 border-b border-gray-200 pb-2">Limit Reached</h3>
-                 <p className="text-sm font-semibold text-gray-600 mb-6">
-                   Verify to unlock more listings.
-                 </p>
-                 <button className="bg-[#408A71] text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-md">
-                   Verify Account
-                 </button>
-               </div>
-             </div>
-          </div>
-        </section>
-
-        {/* SECTION 6: Tenancy Management */}
-        <section data-section="6" className={`py-32 px-6 relative md:flex md:items-center md:flex-row-reverse md:gap-16 transition-all duration-1000 delay-500 ${visibleSections.includes(6) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
-          <div className="md:w-1/2 mb-12 md:mb-0 relative z-10">
-            <div className="pl-0 md:pl-12">
-               <span className="text-[#408A71] font-black text-xl mb-2 block tracking-widest uppercase">Step 6</span>
-               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Tenancy Management</h2>
-               <p className="text-xl text-gray-500 italic border-l-4 border-gray-300 pl-4">
-                 “Seamless digital agreements and transparent tracking.”
-               </p>
-            </div>
           </div>
 
           <div className="md:w-1/2 relative flex justify-end">
-             <div className="absolute top-1/2 -left-12 md:right-auto md:-right-8 -translate-y-1/2 w-6 h-6 bg-white border-4 border-gray-300 rounded-full z-20 shadow-sm" />
+             <div className="absolute top-1/2 -left-8 md:right-auto md:-right-10 -translate-y-1/2 w-4 h-4 bg-gray-900 rounded-full z-20 shadow-[0_0_15px_rgba(17,24,39,0.6)]" />
              
              {/* Tenancy Dashboard Simulator */}
-             <div className="w-full bg-white rounded-[2rem] p-8 shadow-2xl border border-gray-100 flex flex-col gap-6 transform transition-all hover:scale-[1.02]">
-               <div className="flex items-center justify-between border-b border-gray-100 pb-4">
-                 <div>
-                   <p className="text-[10px] font-bold text-[#408A71] uppercase tracking-widest">Active Tenancy</p>
-                   <h3 className="font-bold text-gray-900 text-lg">Oceanview Apartment</h3>
+             <div className="w-full bg-white rounded-3xl p-8 shadow-2xl border border-gray-200 flex flex-col gap-6 transform transition-all hover:translate-y-[-5px]">
+               <div className="flex items-center justify-between border-b border-gray-100 pb-5">
+                 <div className="flex items-center gap-4">
+                   <div className="p-3 bg-gray-100 rounded-xl text-gray-700">
+                     <FileSignature size={24} />
+                   </div>
+                   <div>
+                     <p className="text-[10px] font-bold text-[#408A71] uppercase tracking-widest mb-1">Active Tenancy</p>
+                     <h3 className="font-black text-gray-900 text-lg">Skyline Apartments #4B</h3>
+                   </div>
                  </div>
-                 <div className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">
-                   Active
-                 </div>
+                 <div className="w-3 h-3 bg-green-500 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.6)] animate-pulse"></div>
                </div>
 
                <div className="grid grid-cols-2 gap-4">
-                 <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                   <p className="text-xs text-gray-500 font-semibold mb-1">Monthly Rent</p>
-                   <p className="font-black text-gray-900">₹24,000</p>
+                 <div className="bg-gray-50 p-5 rounded-2xl border border-gray-200">
+                   <p className="text-xs text-gray-500 font-bold mb-2 uppercase tracking-wide">Monthly Rent</p>
+                   <p className="text-2xl font-black text-gray-900">₹32,500</p>
                  </div>
-                 <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                   <p className="text-xs text-gray-500 font-semibold mb-1">Next Due</p>
-                   <p className="font-black text-amber-600 flex items-center gap-1"><Clock size={14}/> 5th Oct</p>
+                 <div className="bg-orange-50 p-5 rounded-2xl border border-orange-200">
+                   <p className="text-xs text-orange-600 font-bold mb-2 uppercase tracking-wide">Next Due</p>
+                   <p className="text-xl font-black text-orange-700 flex items-center gap-2"><Clock size={18}/> Tomorrow</p>
                  </div>
                </div>
 
-               <div className="flex gap-2">
-                 <button className="flex-1 bg-gray-900 text-white rounded-xl py-3 text-xs font-bold hover:bg-black transition-colors flex items-center justify-center gap-2">
-                   <FileSignature size={14} /> Agreement
+               <div className="flex gap-3 mt-2">
+                 <button className="flex-1 bg-gray-900 text-white rounded-xl py-4 text-sm font-bold hover:bg-black transition-all shadow-md flex items-center justify-center gap-2">
+                   View E-Agreement
                  </button>
-                 <button className="flex-1 bg-[#408A71] text-white rounded-xl py-3 text-xs font-bold hover:bg-emerald-600 transition-colors">
-                   Payment History
+                 <button className="flex-1 bg-[#408A71] text-white rounded-xl py-4 text-sm font-bold hover:bg-emerald-600 transition-all shadow-md">
+                   Record Payment
                  </button>
                </div>
              </div>
@@ -478,31 +392,6 @@ export default function ProductJourneyPage() {
         </section>
 
       </div>
-
-      
-      {/* FINAL IMPACT SECTION */}
-      <section data-section="7" className={`bg-gray-900 text-white py-40 px-6 text-center transition-all duration-2000 ${visibleSections.includes(7) ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-        <div className="max-w-4xl mx-auto flex flex-col items-center">
-          <div className="w-24 h-24 bg-white/5 rounded-3xl flex items-center justify-center mb-12 animate-pulse">
-            <ShieldCheck size={64} className="text-[#408A71]" />
-          </div>
-          <h2 className="text-5xl md:text-8xl font-black mb-10 leading-none tracking-tighter">
-            We build <span className="text-[#408A71]">Accountability</span>.<br />
-            You build <span className="text-white decoration-[#408A71] underline decoration-4 underline-offset-8">Trust</span>.
-          </h2>
-          <p className="text-2xl text-gray-400 mb-16 font-medium max-w-2xl leading-relaxed">
-            The era of scrolling through scams is over. Join the verified rental ecosystem today.
-          </p>
-          <div className="flex flex-col md:flex-row gap-6">
-            <Link href="/properties" className="bg-[#408A71] hover:bg-emerald-600 text-white px-12 py-6 rounded-2xl font-black text-xl shadow-2xl shadow-[#408A71]/40 transition-all hover:-translate-y-2 flex items-center gap-4">
-              Get Started Now <CheckCircle2 size={24} />
-            </Link>
-            <Link href="/verification" className="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-12 py-6 rounded-2xl font-black text-xl transition-all hover:-translate-y-2">
-              Learn More
-            </Link>
-          </div>
-        </div>
-      </section>
 
     </div>
   );
