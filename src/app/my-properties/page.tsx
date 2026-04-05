@@ -14,33 +14,62 @@ export default function MyPropertiesPage() {
   const [tenantedProperties, setTenantedProperties] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (user) {
-      Promise.all([
-        propertyService.getProperties({ ownerId: user.uid }),
-        tenancyService.getTenanciesByOwner(user.uid)
-      ]).then(([propsData, tenanciesData]) => {
-          setProperties(propsData);
-          // Only flag as tenanted if the tenancy is active or pending
-          const activeTenancies = tenanciesData.filter(t => t.status === 'active' || t.status === 'pending');
-          setTenantedProperties(new Set(activeTenancies.map(t => t.property_id)));
-        })
-        .catch(console.error)
-        .finally(() => setIsLoading(false));
-    } else {
-      setIsLoading(false);
+  // Mock properties to fall back to during MVP demo when unauthenticated
+  const mockOwnerProperties: Property[] = [
+    {
+      id: "mock_p_1",
+      title: "Premium Sea-View Apartment",
+      description: "Demo property",
+      rent: 22000,
+      city: "Kochi",
+      address: "Marine Drive",
+      ownerId: "demo_owner",
+      verified: true,
+      createdAt: new Date().toISOString(),
+      type: "rent",
+      beds: 2,
+      baths: 2,
+      sqft: 1200
+    },
+    {
+      id: "mock_p_2",
+      title: "Cozy Studio in Tech Park",
+      description: "Demo property",
+      rent: 18000,
+      city: "Bangalore",
+      address: "Indiranagar",
+      ownerId: "demo_owner",
+      verified: true,
+      createdAt: new Date(Date.now() - 86400000).toISOString(),
+      type: "rent",
+      beds: 1,
+      baths: 1,
+      sqft: 600
     }
+  ];
+
+  useEffect(() => {
+    const ownerId = user?.uid || "demo_owner";
+    
+    Promise.all([
+      propertyService.getProperties({ ownerId }),
+      tenancyService.getTenanciesByOwner(ownerId)
+    ]).then(([propsData, tenanciesData]) => {
+        // Use real data if authenticated and exists, else fallback to mock data for MVP pitching
+        if (!user?.uid || propsData.length === 0) {
+          setProperties(mockOwnerProperties);
+        } else {
+          setProperties(propsData);
+        }
+        
+        // Only flag as tenanted if the tenancy is active or pending
+        const activeTenancies = tenanciesData.filter(t => t.status === 'active' || t.status === 'pending');
+        setTenantedProperties(new Set(activeTenancies.map(t => t.property_id)));
+      })
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
   }, [user]);
 
-  if (!user || !userProfile || !['owner', 'agent', 'builder'].includes(userProfile.role)) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center pt-24 pb-20">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h1>
-        <p className="text-gray-500">Only authorized property posters can view this dashboard.</p>
-        <Link href="/" className="mt-6 bg-[#408A71] text-white px-8 py-3 rounded-xl font-bold">Go Home</Link>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 pt-32 pb-20">
