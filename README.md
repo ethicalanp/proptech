@@ -28,7 +28,7 @@ The rental market is broken in ways most platforms ignore:
 
 ## The Solution
 
-RentOS brings the entire rental lifecycle onto a single platform:
+WE brings the entire rental lifecycle onto a single platform:
 
 | Feature | What it does |
 |---|---|
